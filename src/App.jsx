@@ -343,8 +343,10 @@ function SegmentedTabs({ tabs }) {
             type="button"
             data-idx={idx}
             className={[
-              "relative z-10 shrink-0 whitespace-nowrap px-2 py-1 text-xs font-semibold",
-              idx === active ? "text-tech-blue" : "text-slate-500 hover:text-slate-700"
+              "relative z-10 shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-semibold transition-colors",
+              idx === active
+                ? "border-blue-600 bg-blue-600 text-white"
+                : "border-blue-100 bg-blue-50 text-blue-900 hover:border-blue-600 hover:bg-blue-600 hover:text-white"
             ].join(" ")}
             onClick={() => activate(idx)}
           >
@@ -480,12 +482,12 @@ export default function App() {
       {/* Hero */}
       <section ref={heroRef} className="mx-auto w-full max-w-7xl px-5 pt-6 md:px-8">
         <div className="grid overflow-hidden rounded-3xl shadow-xl md:grid-cols-2 md:min-h-[70vh] md:items-stretch">
-          <div className="flex flex-col justify-center bg-white px-6 py-12 md:h-full md:px-12">
+          <div className="flex flex-col justify-center bg-white px-6 py-12 md:h-full md:pl-16 md:pr-12">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-3xl font-bold tracking-wider text-[#007AFF] md:text-5xl"
+              className="bg-gradient-to-r from-[#002347] to-[#007AFF] bg-clip-text text-3xl font-bold leading-tight tracking-wider text-transparent md:text-5xl"
             >
               用科学与保障，
               <br />
@@ -500,17 +502,17 @@ export default function App() {
               深入了解多层次保障体系与创新药使用指南，让每一份保障更有温度。
             </motion.p>
 
-            <div className="mt-7 inline-flex flex-wrap gap-3 rounded-2xl bg-[#002347] p-2">
+            <div className="mt-7 inline-flex flex-wrap gap-3">
               <button
                 type="button"
-                className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[#0066d6]"
+                className="rounded-lg bg-[#002347] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#001a33]"
                 onClick={() => openScienceModule(setIsVisible)}
               >
                 了解多层次保障
               </button>
               <button
                 type="button"
-                className="rounded-xl border border-white bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                className="rounded-lg border border-[#002347] bg-white px-5 py-3 text-sm font-semibold text-[#002347] transition hover:bg-slate-50"
                 onClick={() => scrollToId("drugs")}
               >
                 查看创新药指南
@@ -605,7 +607,7 @@ export default function App() {
                             <c.icon className="h-5 w-5 text-[#007AFF]" />
                           </div>
                           <div>
-                            <div className="text-2xl font-bold text-slate-900">{c.title}</div>
+                            <div className="text-xl font-semibold text-slate-900 md:text-2xl">{c.title}</div>
                             <div className="text-xs text-slate-500">{c.desc}</div>
                           </div>
                         </div>
