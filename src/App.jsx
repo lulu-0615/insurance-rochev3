@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { Activity, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
+import { HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
 import insuranceConfig from "../insurance_config.json";
 
 /**
@@ -368,17 +368,19 @@ function InsuranceTool({ data }) {
       {modules.map((m) => (
         <div key={m.id} className="legacy-m1-card">
           <div className="legacy-m1-inner">
-            <div className="legacy-m1-title">{m.title}</div>
-            {m.description ? (
-              <div className="legacy-m1-desc">
-                {parseL1Description(m.description).map((row, idx) => (
-                  <div key={idx} className="legacy-m1-desc-row">
-                    <div className="legacy-m1-desc-label">{row.label}</div>
-                    <div className="legacy-m1-desc-value">{row.value}</div>
-                  </div>
-                ))}
-              </div>
-            ) : null}
+            <div className="legacy-m1-head">
+              <div className="legacy-m1-title">{m.title}</div>
+              {m.description ? (
+                <div className="legacy-m1-desc">
+                  {parseL1Description(m.description).map((row, idx) => (
+                    <div key={idx} className="legacy-m1-desc-row">
+                      <div className="legacy-m1-desc-label">{row.label}</div>
+                      <div className="legacy-m1-desc-value">{row.value}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
             <div className="legacy-m1-accordion">
               {(m.accordion || []).map((acc) => (
@@ -395,7 +397,17 @@ function InsuranceTool({ data }) {
                         ) : null}
                       </div>
                     </div>
-                    <div className="legacy-m1-acc2-hint">展开</div>
+                    <span className="legacy-m1-acc2-chevron" aria-hidden="true">
+                      <svg viewBox="0 0 20 20" fill="none">
+                        <path
+                          d="M5.5 7.5L10 12l4.5-4.5"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
                   </summary>
                   {acc.tabs?.length ? (
                     <div className="legacy-m1-acc2-body">
@@ -413,11 +425,11 @@ function InsuranceTool({ data }) {
 }
 
 /**
- * @param {{children: React.ReactNode, id: string}} props
+ * @param {{children: React.ReactNode, id: string, className?: string}} props
  */
-function Section({ children, id }) {
+function Section({ children, id, className }) {
   return (
-    <section id={id} className="mx-auto w-full max-w-7xl px-5 py-14 md:px-8">
+    <section id={id} className={["mx-auto w-full max-w-7xl px-5 py-14 md:px-8", className || ""].join(" ")}>
       {children}
     </section>
   );
@@ -468,12 +480,12 @@ export default function App() {
       {/* Hero */}
       <section ref={heroRef} className="mx-auto w-full max-w-7xl px-5 pt-6 md:px-8">
         <div className="grid overflow-hidden rounded-3xl shadow-xl md:grid-cols-2 md:min-h-[70vh] md:items-stretch">
-          <div className="flex flex-col justify-center bg-gradient-to-br from-[#002347] to-[#004080] px-6 py-12 md:h-full md:px-12">
+          <div className="flex flex-col justify-center bg-white px-6 py-12 md:h-full md:px-12">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-3xl font-bold tracking-wider md:text-5xl"
+              className="text-3xl font-bold tracking-wider text-[#007AFF] md:text-5xl"
             >
               用科学与保障，
               <br />
@@ -483,31 +495,26 @@ export default function App() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08 }}
-              className="mt-4 max-w-lg text-sm leading-relaxed text-white/70 md:text-base"
+              className="mt-4 max-w-lg text-sm leading-relaxed text-slate-600 md:text-base"
             >
               深入了解多层次保障体系与创新药使用指南，让每一份保障更有温度。
             </motion.p>
 
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-7 inline-flex flex-wrap gap-3 rounded-2xl bg-[#002347] p-2">
               <button
                 type="button"
-                className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white hover:bg-[#0066d6]"
+                className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[#0066d6]"
                 onClick={() => openScienceModule(setIsVisible)}
               >
                 了解多层次保障
               </button>
               <button
                 type="button"
-                className="rounded-xl border border-white/30 bg-white/0 px-5 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/20"
+                className="rounded-xl border border-white bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
                 onClick={() => scrollToId("drugs")}
               >
                 查看创新药指南
               </button>
-            </div>
-
-            <div className="mt-8 flex items-center gap-3 text-xs text-white/55">
-              <Activity className="h-4 w-4 text-tech-blue" />
-              <span>滚动触发动画 · 响应式 · 玻璃拟态</span>
             </div>
           </div>
 
@@ -524,9 +531,6 @@ export default function App() {
             <div className="absolute inset-0 bg-gradient-to-l from-deep-navy/25 via-transparent to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 glass rounded-2xl p-4">
               <div className="text-sm font-semibold">保障科普 · 一页看懂</div>
-              <div className="mt-1 text-xs text-white/65">
-                模块化结构 + 类别切换 + 药物卡片横滑
-              </div>
             </div>
           </div>
         </div>
@@ -537,9 +541,6 @@ export default function App() {
         <div className="flex items-end justify-between gap-6">
           <div>
             <div className="mt-2 text-2xl font-bold text-[#007AFF] md:text-3xl">多层次保障科普</div>
-            <div className="mt-2 max-w-2xl text-sm text-slate-500">
-              初始仅展示 Slogan；点击后使用 Framer Motion 的 staggerChildren 横向弹出三张玻璃卡片。
-            </div>
           </div>
           <div className="hidden md:block text-xs text-slate-400">
             {heroInView ? "首屏已进入视口" : "向上滚动查看首屏"}
@@ -604,12 +605,9 @@ export default function App() {
                             <c.icon className="h-5 w-5 text-[#007AFF]" />
                           </div>
                           <div>
-                            <div className="text-sm font-semibold text-slate-900">{c.title}</div>
+                            <div className="text-2xl font-bold text-slate-900">{c.title}</div>
                             <div className="text-xs text-slate-500">{c.desc}</div>
                           </div>
-                        </div>
-                        <div className="mt-4 text-xs text-slate-500">
-                          下方将加载你的「多层次保障科普小工具」内容（JSON 驱动）。
                         </div>
                       </div>
                     </motion.div>
@@ -626,7 +624,7 @@ export default function App() {
       </Section>
 
       {/* Module 2 */}
-      <Section id="drugs">
+      <Section id="drugs" className="pt-20">
         <div className="grid gap-6 md:grid-cols-2 md:items-stretch md:gap-0 md:min-h-[60vh]">
           <motion.div
             className="order-1 overflow-hidden rounded-3xl ring-1 ring-white/10 md:h-full md:rounded-r-none"
@@ -646,21 +644,15 @@ export default function App() {
             />
             <div className="glass p-4">
               <div className="text-sm font-semibold">医学节律 · 工具化体验</div>
-              <div className="mt-1 text-xs text-white/60">
-                结合图片渐隐与滚动动效，保持“医疗科技风”的高级感。
-              </div>
             </div>
           </motion.div>
 
           <div className="order-2 flex h-full flex-col justify-center rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 md:rounded-l-none md:p-10">
             <div className="mt-2 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
-            <div className="mt-2 text-sm leading-relaxed text-slate-500">
-              反向对开布局（左图右文）。点击按钮跳转到外部工具页面。
-            </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white hover:bg-[#0066d6]"
+                className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[#0066d6]"
                 href="http://idate.top/gft.html"
                 target="_blank"
                 rel="noreferrer noopener"
@@ -689,5 +681,6 @@ export default function App() {
     </div>
   );
 }
+
 
 
