@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 700px at 20% 10%, rgba(0, 122, 255, 0.24), transparent 60%),
+    radial-gradient(900px 520px at 80% 30%, rgba(224, 242, 241, 0.14), transparent 55%),
+    #002347;
+}
+
+/* 玻璃拟态基础 */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(0, 122, 255, 0.25);
+  backdrop-filter: blur(16px);
+}
+
+/* 图片边缘渐隐（Module2 用） */
+.mask-fade-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
