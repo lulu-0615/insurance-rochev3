@@ -66,6 +66,9 @@ function openScienceModule(setVisible) {
   }, 30);
 }
 
+/** 注射日期计算器外链（与「打开」按钮一致） */
+const GFT_CALCULATOR_URL = "http://idate.top/gft.html";
+
 /**
  * @param {string} text
  * @returns {Array<{label: string, value: string}>}
@@ -444,6 +447,7 @@ export default function App() {
   /** @type {InsuranceConfigRoot} */
   const data = insuranceConfig;
   const [isVisible, setIsVisible] = useState(false);
+  const [gftLinkCopied, setGftLinkCopied] = useState(false);
 
   const nav = useMemo(
     () => [
@@ -656,15 +660,35 @@ export default function App() {
           <div className="order-2 flex h-full flex-col justify-center rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 md:rounded-l-none md:p-10">
             <div className="mt-2 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <p className="mt-3 text-xs leading-relaxed text-slate-500">
+              若手机无法直接打开，请点「复制链接」，在系统浏览器地址栏粘贴访问。
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-3">
               <a
                 className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
-                href="https://idate.top/gft.html"
-                rel="noreferrer"
+                href={GFT_CALCULATOR_URL}
+                target="_blank"
+                rel="noreferrer noopener"
               >
                 <ExternalLink className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
                 打开注射日期计算器
               </a>
+              <button
+                type="button"
+                className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
+                onClick={() => {
+                  copyToClipboard(GFT_CALCULATOR_URL)
+                    .then(() => {
+                      setGftLinkCopied(true);
+                      window.setTimeout(() => setGftLinkCopied(false), 2500);
+                    })
+                    .catch(() => {});
+                }}
+              >
+                <Copy className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
+                复制链接
+              </button>
               <button
                 type="button"
                 className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
@@ -674,6 +698,11 @@ export default function App() {
                 返回保障科普
               </button>
             </div>
+            {gftLinkCopied ? (
+              <p className="mt-2 text-xs font-medium text-emerald-600" role="status">
+                已复制，请到浏览器粘贴打开
+              </p>
+            ) : null}
           </div>
         </div>
       </Section>
