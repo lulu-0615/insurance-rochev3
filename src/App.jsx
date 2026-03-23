@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, Copy, ExternalLink, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
 import insuranceConfig from "../insurance_config.json";
 
 /**
@@ -236,7 +236,7 @@ function DrugSwiper({ tab }) {
                 <div className="mt-3">
                   <button
                     type="button"
-                    className="rounded-xl border border-tech-blue/35 bg-tech-blue px-3 py-2 text-xs font-semibold text-white hover:bg-[#0066d6]"
+                    className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
                     onClick={() => {
                       if (it.link_kind === "copy") {
                         copyToClipboard(it.link || "");
@@ -245,6 +245,11 @@ function DrugSwiper({ tab }) {
                       window.open(it.link, "_blank", "noopener,noreferrer");
                     }}
                   >
+                    {it.link_kind === "copy" ? (
+                      <Copy className="h-3.5 w-3.5 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
+                    ) : (
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
+                    )}
                     {it.link_kind === "copy" ? "复制链接" : "打开链接"}
                   </button>
                 </div>
@@ -343,10 +348,8 @@ function SegmentedTabs({ tabs }) {
             type="button"
             data-idx={idx}
             className={[
-              "relative z-10 shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-semibold transition-colors",
-              idx === active
-                ? "border-blue-600 bg-blue-600 text-white"
-                : "border-blue-100 bg-blue-50 text-blue-900 hover:border-blue-600 hover:bg-blue-600 hover:text-white"
+              "relative z-10 shrink-0 whitespace-nowrap px-2 py-1 text-xs font-semibold",
+              idx === active ? "text-tech-blue" : "text-slate-500 hover:text-slate-700"
             ].join(" ")}
             onClick={() => activate(idx)}
           >
@@ -482,7 +485,7 @@ export default function App() {
       {/* Hero */}
       <section ref={heroRef} className="mx-auto w-full max-w-7xl px-5 pt-6 md:px-8">
         <div className="grid overflow-hidden rounded-3xl shadow-xl md:grid-cols-2 md:min-h-[70vh] md:items-stretch">
-          <div className="flex flex-col justify-center bg-white px-6 py-12 md:h-full md:pl-16 md:pr-12">
+          <div className="flex flex-col justify-center bg-white py-12 pl-6 pr-6 md:h-full md:pl-12 md:pr-12">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -502,10 +505,10 @@ export default function App() {
               深入了解多层次保障体系与创新药使用指南，让每一份保障更有温度。
             </motion.p>
 
-            <div className="mt-7 inline-flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap gap-3">
               <button
                 type="button"
-                className="rounded-lg bg-[#002347] px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#001a33]"
+                className="rounded-lg bg-[#002347] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-95"
                 onClick={() => openScienceModule(setIsVisible)}
               >
                 了解多层次保障
@@ -566,9 +569,10 @@ export default function App() {
                 </div>
                 <button
                   type="button"
-                  className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white hover:bg-[#0066d6]"
+                  className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
                   onClick={() => openScienceModule(setIsVisible)}
                 >
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
                   科普保障小工具
                 </button>
               </div>
@@ -654,18 +658,20 @@ export default function App() {
 
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                className="rounded-xl bg-tech-blue px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[#0066d6]"
+                className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
                 href="http://idate.top/gft.html"
                 target="_blank"
                 rel="noreferrer noopener"
               >
+                <ExternalLink className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
                 打开注射日期计算器
               </a>
               <button
                 type="button"
-                className="rounded-xl border border-tech-blue/30 bg-white px-5 py-3 text-sm font-semibold text-[#007AFF] transition hover:bg-blue-50"
+                className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
                 onClick={() => scrollToId("science")}
               >
+                <ArrowLeft className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
                 返回保障科普
               </button>
             </div>
@@ -683,6 +689,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
