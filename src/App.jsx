@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, Copy, ExternalLink, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
 import insuranceConfig from "../insurance_config.json";
 
 /**
@@ -60,14 +60,14 @@ function scrollToId(id) {
  * @returns {void}
  */
 function openScienceModule(setVisible) {
-  setVisible(() => true);
-  window.requestAnimationFrame(() => {
-    scrollToId("science");
-  });
+  setVisible(true);
   window.setTimeout(() => {
     scrollToId("science");
-  }, 120);
+  }, 30);
 }
+
+/** 注射日期计算器外链（与「打开」按钮一致） */
+const GFT_CALCULATOR_URL = "http://idate.top/gft.html";
 
 /**
  * @param {string} text
@@ -432,292 +432,6 @@ function InsuranceTool({ data }) {
   );
 }
 
-/** @typedef {{index:number, description:string, date:string, dose:string, note?:string}} ScheduleRow */
-
-const DRUG_OPTIONS = [
-  { id: "g", name: "奥妥珠单抗", regimens: ["G-CHOP", "G-CVP", "G-B"] },
-  { id: "pola", name: "维泊妥珠单抗", regimens: ["标准方案"] },
-  { id: "glofit", name: "格菲妥珠单抗", regimens: ["标准阶梯方案"] },
-  { id: "mosun", name: "莫妥珠单抗", regimens: ["标准阶梯方案"] }
-];
-
-/**
- * @param {Date} base
- * @param {number} days
- * @returns {Date}
- */
-function addDays(base, days) {
-  const d = new Date(base);
-  d.setDate(d.getDate() + days);
-  return d;
-}
-
-/**
- * @param {Date} base
- * @param {number} months
- * @returns {Date}
- */
-function addMonths(base, months) {
-  const d = new Date(base);
-  d.setMonth(d.getMonth() + months);
-  return d;
-}
-
-/**
- * @param {Date} d
- * @returns {string}
- */
-function formatDate(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-/**
- * @param {string} text
- * @returns {React.ReactNode}
- */
-function renderDoseText(text) {
-  const src = String(text || "");
-  const parts = src.split(/(\d+(?:\.\d+)?mg|单药治疗|单药)/g);
-  return parts.map((p, i) =>
-    /(\d+(?:\.\d+)?mg|单药治疗|单药)/.test(p) ? (
-      <span key={i} className="font-bold text-slate-800">
-        {p}
-      </span>
-    ) : (
-      <span key={i}>{p}</span>
-    )
-  );
-}
-
-/**
- * @param {string} drugId
- * @param {string} regimen
- * @param {string} startDate
- * @returns {Array<ScheduleRow>}
- */
-function buildSchedule(drugId, regimen, startDate) {
-  const start = new Date(startDate + "T00:00:00");
-  /** @type {Array<ScheduleRow>} */
-  const rows = [];
-
-  if (drugId === "mosun") {
-    rows.push({ index: 1, description: "起始日期", date: formatDate(start), dose: "1mg" });
-    rows.push({ index: 2, description: "1周后", date: formatDate(addDays(start, 7)), dose: "2mg" });
-    rows.push({ index: 3, description: "2周后", date: formatDate(addDays(start, 14)), dose: "60mg" });
-    rows.push({ index: 4, description: "3周后", date: formatDate(addDays(start, 21)), dose: "60mg" });
-    for (let i = 5; i <= 13; i += 1) {
-      const date = addDays(start, 21 + (i - 4) * 21);
-      rows.push({
-        index: i,
-        description: `间隔3周（${i}/15）`,
-        date: formatDate(date),
-        dose: "30mg",
-        note:
-          i === 10
-            ? "若本次治疗后达到 CR（完全缓解），则停止莫妥珠单抗给药"
-            : i >= 11
-              ? "若第8周期后达到 PR/SD，继续治疗至第17个周期"
-              : ""
-      });
-    }
-    return rows;
-  }
-
-  if (drugId === "glofit") {
-    rows.push({ index: 1, description: "预处理（第1天）", date: formatDate(start), dose: "预处理" });
-    rows.push({ index: 2, description: "第2次给药（1周后）", date: formatDate(addDays(start, 7)), dose: "2.5mg" });
-    rows.push({ index: 3, description: "第3次给药（2周后）", date: formatDate(addDays(start, 14)), dose: "10mg" });
-    rows.push({ index: 4, description: "第4次给药（3周后）", date: formatDate(addDays(start, 21)), dose: "30mg" });
-    for (let i = 5; i <= 13; i += 1) {
-      rows.push({
-        index: i,
-        description: `第${i}次给药（每21天）`,
-        date: formatDate(addDays(start, 21 + (i - 4) * 21)),
-        dose: "30mg",
-        note: i >= 11 ? "单药治疗" : ""
-      });
-    }
-    return rows;
-  }
-
-  if (drugId === "g") {
-    const isGB = regimen === "G-B";
-    const induction = [0, 7, 14, 21];
-    const inductionDesc = ["起始日期", "1周后", "2周后", "3周后"];
-    induction.forEach((day, i) => {
-      rows.push({
-        index: i + 1,
-        description: inductionDesc[i],
-        date: formatDate(addDays(start, day)),
-        dose: "1000mg"
-      });
-    });
-
-    if (isGB) {
-      for (let i = 1; i <= 4; i += 1) {
-        rows.push({
-          index: rows.length + 1,
-          description: `间隔4周（${i}/4）`,
-          date: formatDate(addDays(start, 21 + i * 28)),
-          dose: "1000mg"
-        });
-      }
-      let base = addDays(start, 21 + 4 * 28);
-      for (let i = 1; i <= 12; i += 1) {
-        base = addMonths(base, 2);
-        rows.push({
-          index: rows.length + 1,
-          description: `间隔2个月（${i}/12）`,
-          date: formatDate(base),
-          dose: "1000mg",
-          note: "奥妥珠单抗单药维持治疗"
-        });
-      }
-    } else {
-      for (let i = 1; i <= 6; i += 1) {
-        rows.push({
-          index: rows.length + 1,
-          description: `间隔3周（${i}/6）`,
-          date: formatDate(addDays(start, 21 + i * 21)),
-          dose: "1000mg",
-          note: i >= 5 ? "奥妥珠单抗单药" : ""
-        });
-      }
-      let base = addDays(start, 21 + 6 * 21);
-      for (let i = 1; i <= 12; i += 1) {
-        base = addMonths(base, 2);
-        rows.push({
-          index: rows.length + 1,
-          description: `间隔2个月（${i}/12）`,
-          date: formatDate(base),
-          dose: "1000mg",
-          note: "奥妥珠单抗单药维持治疗"
-        });
-      }
-    }
-    return rows;
-  }
-
-  if (drugId === "pola") {
-    for (let i = 1; i <= 6; i += 1) {
-      rows.push({
-        index: i,
-        description: i === 1 ? "起始日期" : "间隔3周",
-        date: formatDate(addDays(start, (i - 1) * 21)),
-        dose: "1.8mg/kg",
-        note:
-          i === 6
-            ? "与 R-CHP 联合给药；完成第6周期后，后续周期按医嘱评估是否继续。"
-            : ""
-      });
-    }
-  }
-
-  return rows;
-}
-
-function DrugCalculator() {
-  const [drugId, setDrugId] = useState("g");
-  const [regimen, setRegimen] = useState("G-CHOP");
-  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
-
-  const selectedDrug = useMemo(
-    () => DRUG_OPTIONS.find((d) => d.id === drugId) || DRUG_OPTIONS[0],
-    [drugId]
-  );
-
-  useEffect(() => {
-    setRegimen(selectedDrug.regimens[0]);
-  }, [selectedDrug]);
-
-  const rows = useMemo(() => buildSchedule(drugId, regimen, startDate), [drugId, regimen, startDate]);
-
-  return (
-    <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
-      <div className="grid grid-cols-2 gap-2">
-        {DRUG_OPTIONS.map((d) => (
-          <button
-            key={d.id}
-            type="button"
-            onClick={() => setDrugId(d.id)}
-            className={[
-              "w-full rounded-2xl px-4 py-3 text-left text-sm font-medium transition-colors md:text-base",
-              drugId === d.id ? "bg-[#3B82F6] text-white" : "bg-slate-50 text-slate-700 hover:bg-blue-50"
-            ].join(" ")}
-          >
-            {d.name}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-3">
-        <div className="grid gap-3 md:grid-cols-2">
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-slate-600">用药方案</span>
-            <select
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-800"
-              value={regimen}
-              onChange={(e) => setRegimen(e.target.value)}
-            >
-              {selectedDrug.regimens.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-slate-600">首次用药日期</span>
-            <input
-              type="date"
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-800"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div className="mt-4 max-h-[360px] overflow-auto rounded-xl border border-slate-200">
-          <table className="min-w-full text-left text-sm">
-            <colgroup>
-              <col style={{ width: "56px" }} />
-              <col style={{ width: "210px" }} />
-              <col style={{ width: "150px" }} />
-              <col />
-            </colgroup>
-            <thead className="sticky top-0 bg-slate-50 text-slate-700">
-              <tr>
-                <th className="px-3 py-2">#</th>
-                <th className="px-3 py-2">描述</th>
-                <th className="px-3 py-2">具体日期</th>
-                <th className="px-3 py-2">剂量与关键备注</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.index} className="border-t border-slate-100 align-top">
-                  <td className="px-3 py-2 text-slate-500">{r.index}</td>
-                  <td className="px-3 py-2 text-slate-700">{r.description}</td>
-                  <td className="px-3 py-2 text-slate-700">{r.date}</td>
-                  <td className="px-3 py-2 text-slate-700">
-                    {renderDoseText(r.dose)}
-                    {r.note ? (
-                      <span className="ml-2 text-xs italic text-slate-600">{renderDoseText(r.note)}</span>
-                    ) : null}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /**
  * @param {{children: React.ReactNode, id: string, className?: string}} props
  */
@@ -733,6 +447,7 @@ export default function App() {
   /** @type {InsuranceConfigRoot} */
   const data = insuranceConfig;
   const [isVisible, setIsVisible] = useState(false);
+  const [gftLinkCopied, setGftLinkCopied] = useState(false);
 
   const nav = useMemo(
     () => [
@@ -920,7 +635,7 @@ export default function App() {
 
       {/* Module 2 */}
       <Section id="drugs" className="pt-20">
-        <div className="grid gap-6 md:grid-cols-[3fr,7fr] md:items-stretch md:gap-0 md:min-h-[60vh]">
+        <div className="grid gap-6 md:grid-cols-2 md:items-stretch md:gap-0 md:min-h-[60vh]">
           <motion.div
             className="order-1 overflow-hidden rounded-3xl ring-1 ring-white/10 md:h-full md:rounded-r-none"
             initial={{ opacity: 0, y: 18 }}
@@ -931,7 +646,7 @@ export default function App() {
             <img
               src="/assets/drugs_bg.jpg"
               alt="drugs background"
-              className="mask-fade-x aspect-video h-full w-full object-cover md:aspect-auto md:max-h-[420px]"
+              className="mask-fade-x aspect-video h-full w-full object-cover md:aspect-auto"
               onError={(e) => {
                 // 兜底：你没放 jpg 时仍能看到背景
                 e.currentTarget.src = "/assets/drugs_bg.svg";
@@ -944,7 +659,50 @@ export default function App() {
 
           <div className="order-2 flex h-full flex-col justify-center rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 md:rounded-l-none md:p-10">
             <div className="mt-2 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
-            <DrugCalculator />
+
+            <p className="mt-3 text-xs leading-relaxed text-slate-500">
+              若手机无法直接打开，请点「复制链接」，在系统浏览器地址栏粘贴访问。
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
+                href={GFT_CALCULATOR_URL}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <ExternalLink className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
+                打开注射日期计算器
+              </a>
+              <button
+                type="button"
+                className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
+                onClick={() => {
+                  copyToClipboard(GFT_CALCULATOR_URL)
+                    .then(() => {
+                      setGftLinkCopied(true);
+                      window.setTimeout(() => setGftLinkCopied(false), 2500);
+                    })
+                    .catch(() => {});
+                }}
+              >
+                <Copy className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
+                复制链接
+              </button>
+              <button
+                type="button"
+                className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
+                onClick={() => scrollToId("science")}
+              >
+                <ArrowLeft className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
+                返回保障科普
+              </button>
+            </div>
+            {gftLinkCopied ? (
+              <p className="mt-2 text-xs font-medium text-emerald-600" role="status">
+                已复制，请到浏览器粘贴打开
+              </p>
+            ) : null}
           </div>
         </div>
       </Section>
@@ -959,6 +717,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
