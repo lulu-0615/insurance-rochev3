@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { Copy, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
+import { HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
 import insuranceConfig from "../insurance_config.json";
 
 /**
@@ -60,10 +60,13 @@ function scrollToId(id) {
  * @returns {void}
  */
 function openScienceModule(setVisible) {
-  setVisible(true);
+  setVisible(() => true);
+  window.requestAnimationFrame(() => {
+    scrollToId("science");
+  });
   window.setTimeout(() => {
     scrollToId("science");
-  }, 30);
+  }, 120);
 }
 
 /**
@@ -480,7 +483,7 @@ function renderDoseText(text) {
   const parts = src.split(/(\d+(?:\.\d+)?mg|单药治疗|单药)/g);
   return parts.map((p, i) =>
     /(\d+(?:\.\d+)?mg|单药治疗|单药)/.test(p) ? (
-      <span key={i} className="font-bold text-red-600">
+      <span key={i} className="font-bold text-slate-800">
         {p}
       </span>
     ) : (
@@ -620,7 +623,6 @@ function DrugCalculator() {
   const [drugId, setDrugId] = useState("g");
   const [regimen, setRegimen] = useState("G-CHOP");
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
-  const [copied, setCopied] = useState(false);
 
   const selectedDrug = useMemo(
     () => DRUG_OPTIONS.find((d) => d.id === drugId) || DRUG_OPTIONS[0],
@@ -634,26 +636,24 @@ function DrugCalculator() {
   const rows = useMemo(() => buildSchedule(drugId, regimen, startDate), [drugId, regimen, startDate]);
 
   return (
-    <div className="mt-5 grid gap-4 md:grid-cols-[220px,1fr]">
-      <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-        <div className="space-y-2">
-          {DRUG_OPTIONS.map((d) => (
-            <button
-              key={d.id}
-              type="button"
-              onClick={() => setDrugId(d.id)}
-              className={[
-                "w-full rounded-2xl px-4 py-3 text-left text-base font-medium transition-colors",
-                drugId === d.id ? "bg-[#3B82F6] text-white" : "bg-white text-slate-700 hover:bg-blue-50"
-              ].join(" ")}
-            >
-              {d.name}
-            </button>
-          ))}
-        </div>
-      </aside>
+    <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="grid grid-cols-2 gap-2">
+        {DRUG_OPTIONS.map((d) => (
+          <button
+            key={d.id}
+            type="button"
+            onClick={() => setDrugId(d.id)}
+            className={[
+              "w-full rounded-2xl px-4 py-3 text-left text-sm font-medium transition-colors md:text-base",
+              drugId === d.id ? "bg-[#3B82F6] text-white" : "bg-slate-50 text-slate-700 hover:bg-blue-50"
+            ].join(" ")}
+          >
+            {d.name}
+          </button>
+        ))}
+      </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="mt-3">
         <div className="grid gap-3 md:grid-cols-2">
           <label className="flex flex-col gap-1 text-sm">
             <span className="text-slate-600">用药方案</span>
@@ -680,27 +680,14 @@ function DrugCalculator() {
           </label>
         </div>
 
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="group inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-900 transition-colors hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white"
-            onClick={() => {
-              copyToClipboard("http://idate.top/gft.html")
-                .then(() => {
-                  setCopied(true);
-                  window.setTimeout(() => setCopied(false), 2000);
-                })
-                .catch(() => {});
-            }}
-          >
-            <Copy className="h-3.5 w-3.5 text-blue-900 group-hover:text-white group-active:text-white" />
-            复制外部计算器链接
-          </button>
-          {copied ? <span className="text-xs font-medium text-emerald-600">已复制</span> : null}
-        </div>
-
         <div className="mt-4 max-h-[360px] overflow-auto rounded-xl border border-slate-200">
           <table className="min-w-full text-left text-sm">
+            <colgroup>
+              <col style={{ width: "56px" }} />
+              <col style={{ width: "210px" }} />
+              <col style={{ width: "150px" }} />
+              <col />
+            </colgroup>
             <thead className="sticky top-0 bg-slate-50 text-slate-700">
               <tr>
                 <th className="px-3 py-2">#</th>
@@ -718,7 +705,7 @@ function DrugCalculator() {
                   <td className="px-3 py-2 text-slate-700">
                     {renderDoseText(r.dose)}
                     {r.note ? (
-                      <span className="ml-2 text-xs italic text-slate-500">{renderDoseText(r.note)}</span>
+                      <span className="ml-2 text-xs italic text-slate-600">{renderDoseText(r.note)}</span>
                     ) : null}
                   </td>
                 </tr>
@@ -933,7 +920,7 @@ export default function App() {
 
       {/* Module 2 */}
       <Section id="drugs" className="pt-20">
-        <div className="grid gap-6 md:grid-cols-2 md:items-stretch md:gap-0 md:min-h-[60vh]">
+        <div className="grid gap-6 md:grid-cols-[3fr,7fr] md:items-stretch md:gap-0 md:min-h-[60vh]">
           <motion.div
             className="order-1 overflow-hidden rounded-3xl ring-1 ring-white/10 md:h-full md:rounded-r-none"
             initial={{ opacity: 0, y: 18 }}
@@ -944,7 +931,7 @@ export default function App() {
             <img
               src="/assets/drugs_bg.jpg"
               alt="drugs background"
-              className="mask-fade-x aspect-video h-full w-full object-cover md:aspect-auto"
+              className="mask-fade-x aspect-video h-full w-full object-cover md:aspect-auto md:max-h-[420px]"
               onError={(e) => {
                 // 兜底：你没放 jpg 时仍能看到背景
                 e.currentTarget.src = "/assets/drugs_bg.svg";
@@ -972,6 +959,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
