@@ -1078,7 +1078,7 @@ export default function App() {
             <img
               src="/assets/drugs_bg.jpg"
               alt="drugs background"
-              className="h-full w-full object-cover object-center md:object-[center_50%]"
+              className="h-full w-full object-cover object-center md:object-[center_70%]"
               onError={(e) => {
                 // 兜底：你没放 jpg 时仍能看到背景
                 e.currentTarget.src = "/assets/drugs_bg.svg";
