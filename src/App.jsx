@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Copy, ExternalLink, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
@@ -452,13 +453,13 @@ function Module2Calculator() {
       {/* Table */}
       <div className="mt-4 min-h-0 flex-1 overflow-hidden rounded-2xl border border-slate-200/70 bg-[rgba(255,255,255,0.65)] backdrop-blur-[10px]">
         <div className="max-h-[min(520px,56vh)] overflow-auto">
-          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+          <table className="w-full min-w-[560px] border-collapse table-fixed text-left text-sm">
             <thead className="sticky top-0 z-10 bg-[#3B82F6] text-white">
               <tr>
                 <th className="min-w-[72px] px-3 py-2.5 text-left text-xs font-bold">#</th>
-                <th className="px-3 py-2.5 text-left text-xs font-bold">描述</th>
-                <th className="w-[160px] px-3 py-2.5 text-left text-xs font-bold">具体日期</th>
-                <th className="min-w-[260px] px-3 py-2.5 text-left text-xs font-bold">剂量与关键备注</th>
+                <th className="w-[34%] px-4 py-2.5 text-left text-xs font-bold">描述</th>
+                <th className="w-[22%] px-4 py-2.5 text-left text-xs font-bold">具体日期</th>
+                <th className="w-[36%] px-2 py-2.5 text-left text-xs font-bold">剂量与关键备注</th>
               </tr>
             </thead>
             <tbody>
@@ -480,11 +481,11 @@ function Module2Calculator() {
                     </div>
                   </td>
 
-                  <td className="px-3 py-2 align-top text-slate-800">{row.desc}</td>
-                  <td className="whitespace-nowrap px-3 py-2 align-top text-sm text-slate-800">
+                  <td className="px-4 py-2 align-top text-slate-800">{row.desc}</td>
+                  <td className="whitespace-nowrap px-4 py-2 align-top text-sm text-slate-800">
                     {formatDate(row.date)}
                   </td>
-                  <td className="min-w-0 px-3 py-2 align-top">
+                  <td className="min-w-0 px-2 py-2 align-top">
                     <DoseAndNoteCell dose={row.dose} note={row.note} />
                   </td>
                 </tr>
@@ -1068,13 +1069,13 @@ export default function App() {
       {/* Module 2 */}
       <Section id="drugs" className="pt-20">
         <motion.div
-          className="flex min-h-[70vh] flex-col overflow-hidden rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
+          className="flex h-[100svh] max-h-[100svh] min-h-[100svh] flex-col overflow-hidden rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.55 }}
         >
-          <div className="shrink-0 basis-[24%] overflow-hidden">
+          <div className="shrink-0 basis-[30%] overflow-hidden">
             <img
               src="/assets/drugs_bg.jpg"
               alt="drugs background"
@@ -1086,7 +1087,7 @@ export default function App() {
             />
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col p-6 md:p-8">
+          <div className="flex min-h-0 basis-[70%] flex-col p-6 md:p-8">
             <div className="shrink-0 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
             <div className="mt-5 min-h-0 flex-1 overflow-hidden">
               <Module2Calculator />
@@ -1105,6 +1106,4 @@ export default function App() {
     </div>
   );
 }
-
-
 
