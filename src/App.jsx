@@ -316,8 +316,6 @@ function DoseAndNoteCell({ dose, note }) {
   const hasNote = Boolean(note && String(note).trim());
 
   const noteText = hasNote ? String(note) : "";
-  const isLongClinical = hasNote && noteText.length > 70;
-  const isKeyNote = noteText === "单药" || noteText === "单药维持" || noteText === GLOFIT_NOTE_ROW4_10;
 
   return (
     <div className="min-w-0 text-left">
@@ -326,8 +324,7 @@ function DoseAndNoteCell({ dose, note }) {
         <span
           className={[
             hasDose ? "ml-1.5" : "",
-            "inline-block text-[12px] leading-snug text-slate-400",
-            isLongClinical ? "italic font-normal" : isKeyNote ? "font-bold" : "font-normal"
+            "inline-block text-[12px] font-normal italic leading-snug text-slate-400"
           ].join(" ")}
         >
           {noteText}
@@ -388,10 +385,8 @@ function Module2Calculator() {
 
   return (
     <div className="flex min-h-0 flex-col font-sans">
-      <div className="text-xs font-semibold tracking-wide text-slate-500">罗氏肿瘤药物注射计算器</div>
-
       {/* Pill Toggle：2x2 */}
-      <div className="mt-4">
+      <div>
         <div className="relative rounded-3xl bg-[rgba(59,130,246,0.06)] p-1">
           <div ref={pillGridRef} className="relative grid grid-cols-2 gap-1">
             <div
@@ -486,7 +481,7 @@ function Module2Calculator() {
                   </td>
 
                   <td className="px-3 py-2 align-top text-slate-800">{row.desc}</td>
-                  <td className="whitespace-nowrap px-3 py-2 align-top font-mono text-xs text-slate-700">
+                  <td className="whitespace-nowrap px-3 py-2 align-top text-sm text-slate-800">
                     {formatDate(row.date)}
                   </td>
                   <td className="min-w-0 px-3 py-2 align-top">
@@ -1072,32 +1067,32 @@ export default function App() {
 
       {/* Module 2 */}
       <Section id="drugs" className="pt-20">
-        <div className="flex min-h-[70vh] flex-col gap-4">
-          <motion.div
-            className="relative flex-[3] overflow-hidden rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.55 }}
-          >
+        <motion.div
+          className="flex min-h-[70vh] flex-col overflow-hidden rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.55 }}
+        >
+          <div className="shrink-0 basis-[24%] overflow-hidden">
             <img
               src="/assets/drugs_bg.jpg"
               alt="drugs background"
-              className="h-full w-full object-cover object-center md:object-[center_38%]"
+              className="h-full w-full object-cover object-center md:object-[center_42%]"
               onError={(e) => {
                 // 兜底：你没放 jpg 时仍能看到背景
                 e.currentTarget.src = "/assets/drugs_bg.svg";
               }}
             />
-          </motion.div>
+          </div>
 
-          <div className="flex min-h-0 flex-[7] flex-col rounded-3xl bg-[rgba(255,255,255,0.85)] p-6 backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:p-8">
+          <div className="flex min-h-0 flex-1 flex-col p-6 md:p-8">
             <div className="shrink-0 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
-            <div className="mt-5 min-h-0 flex-1">
+            <div className="mt-5 min-h-0 flex-1 overflow-hidden">
               <Module2Calculator />
             </div>
           </div>
-        </div>
+        </motion.div>
       </Section>
 
       {/* Footer */}
@@ -1110,5 +1105,6 @@ export default function App() {
     </div>
   );
 }
+
 
 
