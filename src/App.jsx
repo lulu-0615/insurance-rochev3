@@ -220,7 +220,7 @@ function generateSchedule(drug, plan, startDate) {
 
       rows.push({
         index: i,
-        desc: "每3周",
+        desc: "间隔3周",
         date: cloneDate(d),
         dose: "30mg",
         note
@@ -237,7 +237,7 @@ function generateSchedule(drug, plan, startDate) {
       const isSix = i === 6;
       rows.push({
         index: i,
-        desc: "每3周",
+        desc: "间隔3周",
         date: cloneDate(d),
         dose: "",
         note: isSix ? POLA_RCHP_CYCLE6_NOTE : ""
@@ -258,7 +258,7 @@ function generateSchedule(drug, plan, startDate) {
         d = addDays(d, 21);
         rows.push({
           index: i,
-          desc: "每3周",
+          desc: "间隔3周",
           date: cloneDate(d),
           dose: "",
           note: i >= 9 ? "单药" : ""
@@ -269,7 +269,7 @@ function generateSchedule(drug, plan, startDate) {
         d = addMonths(d, 2);
         rows.push({
           index: i,
-          desc: "每2个月",
+          desc: "间隔2个月",
           date: cloneDate(d),
           dose: "",
           note: "单药维持"
@@ -284,7 +284,7 @@ function generateSchedule(drug, plan, startDate) {
         d = addDays(d, 28);
         rows.push({
           index: i,
-          desc: "每4周",
+          desc: "间隔4周",
           date: cloneDate(d),
           dose: "",
           note: ""
@@ -295,7 +295,7 @@ function generateSchedule(drug, plan, startDate) {
         d = addMonths(d, 2);
         rows.push({
           index: i,
-          desc: "每2个月",
+          desc: "间隔2个月",
           date: cloneDate(d),
           dose: "",
           note: "单药维持"
@@ -1072,9 +1072,9 @@ export default function App() {
 
       {/* Module 2 */}
       <Section id="drugs" className="pt-20">
-        <div className="grid gap-6 md:min-h-[60vh] md:grid-cols-[3fr_7fr] md:items-stretch md:gap-0">
+        <div className="flex min-h-[70vh] flex-col gap-4">
           <motion.div
-            className="order-1 min-h-full overflow-visible rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:h-full md:rounded-r-none"
+            className="relative flex-[3] overflow-hidden rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
@@ -1083,7 +1083,7 @@ export default function App() {
             <img
               src="/assets/drugs_bg.jpg"
               alt="drugs background"
-              className="mask-fade-x h-full w-full object-contain object-center"
+              className="h-full w-full object-cover object-center md:object-[center_38%]"
               onError={(e) => {
                 // 兜底：你没放 jpg 时仍能看到背景
                 e.currentTarget.src = "/assets/drugs_bg.svg";
@@ -1091,7 +1091,7 @@ export default function App() {
             />
           </motion.div>
 
-          <div className="order-2 flex min-h-0 flex-col rounded-3xl bg-[rgba(255,255,255,0.85)] p-6 backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:rounded-l-none md:p-8">
+          <div className="flex min-h-0 flex-[7] flex-col rounded-3xl bg-[rgba(255,255,255,0.85)] p-6 backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:p-8">
             <div className="shrink-0 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
             <div className="mt-5 min-h-0 flex-1">
               <Module2Calculator />
