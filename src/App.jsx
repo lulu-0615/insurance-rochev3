@@ -324,7 +324,7 @@ function DoseAndNoteCell({ dose, note }) {
         <span
           className={[
             hasDose ? "ml-1.5" : "",
-            "inline text-[12px] font-normal italic leading-snug text-slate-400 break-words whitespace-normal"
+            "inline text-[11px] sm:text-[12px] font-normal italic leading-snug text-slate-400 break-words whitespace-normal"
           ].join(" ")}
         >
           {noteText}
@@ -412,7 +412,7 @@ function Module2Calculator() {
                   type="button"
                   onClick={() => setDrug(key)}
                   className={[
-                    "relative z-10 flex items-center justify-center rounded-2xl px-3 py-3 text-sm font-semibold transition-colors duration-200",
+                    "relative z-10 flex items-center justify-center rounded-2xl px-2 py-2 text-[13px] font-semibold transition-colors duration-200 sm:px-3 sm:py-3 sm:text-sm",
                     active ? "text-white" : "text-[#0B3D91] hover:text-[#007AFF]"
                   ].join(" ")}
                 >
@@ -835,55 +835,53 @@ function InsuranceTool({ data }) {
                     <div
                       className={[
                         "legacy-m1-desc legacy-m1-desc-rows",
-                        showMore ? (expanded ? "legacy-m1-desc-rows--expanded" : "legacy-m1-desc-rows--collapsed") : ""
+                        showMore
+                          ? expanded
+                            ? "legacy-m1-desc-rows--expanded legacy-m1-desc-rows--active"
+                            : "legacy-m1-desc-rows--collapsed"
+                          : ""
                       ].join(" ")}
+                      onClick={() => {
+                        if (!showMore) return;
+                        toggleDesc(m.id);
+                      }}
+                      role={showMore ? "button" : undefined}
+                      tabIndex={showMore ? 0 : undefined}
+                      onKeyDown={(e) => {
+                        if (!showMore) return;
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          toggleDesc(m.id);
+                        }
+                      }}
+                      aria-label={expanded ? "收起详情" : "展开详情"}
                     >
                       {shown.map((row, idx) => (
-                        <div
-                          key={idx}
-                          className={[
-                            "legacy-m1-desc-row",
-                            showMore ? "legacy-m1-desc-row--clickable" : ""
-                          ].join(" ")}
-                          onClick={() => {
-                            if (!showMore) return;
-                            toggleDesc(m.id);
-                          }}
-                          role={showMore ? "button" : undefined}
-                          tabIndex={showMore ? 0 : undefined}
-                          onKeyDown={(e) => {
-                            if (!showMore) return;
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              toggleDesc(m.id);
-                            }
-                          }}
-                        >
+                        <div key={idx} className="legacy-m1-desc-row">
                           <div className="legacy-m1-desc-label">{row.label}</div>
                           <div className="legacy-m1-desc-value">{row.value}</div>
-
-                          {showMore ? (
-                            <button
-                              type="button"
-                              className="legacy-m1-desc-arrow-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleDesc(m.id);
-                              }}
-                              aria-label={expanded ? "收起详情" : "展开详情"}
-                            >
-                              <ChevronDown
-                                className={[
-                                  "h-4 w-4 transition-transform",
-                                  expanded ? "rotate-180" : "rotate-0"
-                                ].join(" ")}
-                                aria-hidden
-                              />
-                            </button>
-                          ) : null}
                         </div>
                       ))}
                     </div>
+
+                    {showMore ? (
+                      <div className="legacy-m1-desc-expand">
+                        <button
+                          type="button"
+                          className="legacy-m1-desc-expand-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDesc(m.id);
+                          }}
+                          aria-label={expanded ? "收起详情" : "展开详情"}
+                        >
+                          <ChevronDown
+                            className={["h-5 w-5 transition-transform", expanded ? "rotate-180" : "rotate-0"].join(" ")}
+                            aria-hidden
+                          />
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 );
               })()
@@ -1154,7 +1152,7 @@ export default function App() {
           </motion.div>
 
           <div className="order-2 flex min-h-0 w-full flex-col rounded-3xl bg-[rgba(255,255,255,0.85)] p-6 backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:rounded-l-none md:p-8 md:h-full">
-            <div className="shrink-0 text-2xl font-bold text-[#007AFF] md:text-3xl">创新药使用指南</div>
+            <div className="shrink-0 text-xl font-bold text-[#007AFF] sm:text-2xl md:text-3xl">创新药使用指南</div>
             <div className="mt-5 min-h-0 flex-1 overflow-hidden overflow-x-visible">
               <Module2Calculator />
             </div>
@@ -1172,6 +1170,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
