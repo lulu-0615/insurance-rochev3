@@ -1134,7 +1134,7 @@ export default function App() {
       <Section id="drugs" className="relative py-12 md:py-20">
         {/* 修改后：增加了容器限制和内边距，并确保圆角在手机端也能显示（如果你想要卡片感） */}
         <div className="container mx-auto px-5"> 
-          <div className="flex flex-col overflow-hidden bg-white shadow-xl md:flex-row rounded-2xl md:rounded-3xl">
+          <div className="grid overflow-hidden rounded-3xl bg-white shadow-xl md:min-h-[60vh] md:grid-cols-2 md:items-stretch md:gap-0">
             {/* 这里的内容保持不变 */}
           <motion.div
             className="order-1 min-h-full w-full overflow-visible rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:h-full md:rounded-r-none"
