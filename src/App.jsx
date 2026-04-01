@@ -337,7 +337,7 @@ function DoseAndNoteCell({ dose, note }) {
 function Module2Calculator() {
   const todayStr = useMemo(() => formatDate(cloneDate(new Date())), []);
   /** @type {[DrugKey, React.Dispatch<React.SetStateAction<DrugKey>>]} */
-  const [drug, setDrug] = useState(/** @type {DrugKey} */ ("obinutuzumab"));
+  const [drug, setDrug] = useState(/** @type {DrugKey} */ ("glofit"));
   const plans = DRUG_PLANS[drug];
   const [plan, setPlan] = useState(() => DRUG_PLANS.obinutuzumab[0]);
   const [firstDate, setFirstDate] = useState(todayStr);
@@ -501,7 +501,7 @@ function Module2Calculator() {
         className="mt-4 self-start rounded-lg bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
         onClick={() => scrollToId("science")}
       >
-        返回保障科普
+        返回保障工具
       </button>
     </div>
   );
@@ -951,7 +951,7 @@ export default function App() {
 
   const nav = useMemo(
     () => [
-      { id: "science", label: "保障科普" },
+      { id: "science", label: "保障工具" },
       { id: "drugs", label: "创新药指南" }
     ],
     []
@@ -1046,7 +1046,7 @@ export default function App() {
       <Section id="science">
         <div className="flex items-end justify-between gap-6">
           <div>
-            <div className="mt-2 text-2xl font-bold text-[#007AFF] md:text-3xl">多层次保障科普</div>
+            <div className="mt-2 text-2xl font-bold text-[#007AFF] md:text-3xl">多层次保障</div>
           </div>
           <div className="hidden md:block text-xs text-slate-400">
             {heroInView ? "首屏已进入视口" : "向上滚动查看首屏"}
@@ -1063,9 +1063,9 @@ export default function App() {
             >
               <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <div className="text-lg font-semibold">用结构化信息，降低理解门槛</div>
+                  <div className="text-lg font-semibold">您的专属多层次保障管家</div>
                   <div className="mt-1 text-sm text-slate-500">
-                    从居民医保到惠民保与商业险，按层级展开查看目录、政策与入口。
+                    帮您理清医保、惠民保及商险的报销规则，让每一份保障都能落到实处。
                   </div>
                 </div>
                 <button
@@ -1074,7 +1074,7 @@ export default function App() {
                   onClick={() => openScienceModule(setIsVisible)}
                 >
                   <ShieldCheck className="h-4 w-4 shrink-0 text-blue-900 group-hover:text-white group-active:text-white" aria-hidden />
-                  科普保障小工具
+                  保障小工具
                 </button>
               </div>
             </motion.div>
@@ -1132,9 +1132,9 @@ export default function App() {
 
       {/* Module 2 */}
       <Section id="drugs" className="pt-20">
-        <div className="grid gap-6 md:min-h-[60vh] md:grid-cols-2 md:items-stretch md:gap-0">
+        <div className="grid overflow-hidden rounded-3xl shadow-xl md:min-h-[60vh] md:grid-cols-2 md:items-stretch">
           <motion.div
-            className="order-1 min-h-full w-full overflow-visible rounded-3xl bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:h-full md:rounded-r-none"
+            className="w-full bg-[rgba(255,255,255,0.85)] backdrop-blur-[10px] overflow-hidden"
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
@@ -1151,7 +1151,7 @@ export default function App() {
             />
           </motion.div>
 
-          <div className="order-2 flex min-h-0 w-full flex-col rounded-3xl bg-[rgba(255,255,255,0.85)] p-6 backdrop-blur-[10px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] md:rounded-l-none md:p-8 md:h-full">
+          <div className="flex min-h-0 w-full flex-col bg-[rgba(255,255,255,0.85)] p-6 backdrop-blur-[10px] md:p-8">
             <div className="shrink-0 text-xl font-bold text-[#007AFF] sm:text-2xl md:text-3xl">创新药使用指南</div>
             <div className="mt-5 min-h-0 flex-1 overflow-hidden overflow-x-visible">
               <Module2Calculator />
@@ -1170,6 +1170,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
