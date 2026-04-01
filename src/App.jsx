@@ -148,6 +148,17 @@ function formatDate(d) {
 }
 
 /**
+ * @param {Date} d
+ * @returns {string}
+ */
+function formatDateDisplay(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}/${m}/${day}`;
+}
+
+/**
  * @param {string} input
  * @returns {Date}
  */
@@ -452,18 +463,18 @@ function Module2Calculator() {
       </div>
 
       {/* Table */}
-      <div className="mt-4 min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl border border-slate-200/70 bg-[rgba(255,255,255,0.65)] backdrop-blur-[10px]">
+      <div className="mt-4 min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl bg-[rgba(255,255,255,0.65)] backdrop-blur-[10px]">
         <div className="relative isolate max-h-[min(520px,56vh)] overflow-x-auto overflow-y-auto custom-scrollbar">
-          <table className="w-[788px] min-w-full table-fixed text-left text-xs sm:text-sm" style={{ borderSpacing: 0 }}>
-            <thead className="sticky top-0 z-50 bg-[#3B82F6] text-white">
+          <table className="w-[788px] min-w-full border-collapse table-fixed text-left text-xs sm:text-sm">
+            <thead className="sticky top-0 z-[80] bg-[#3B82F6] text-white">
               <tr>
                 <th className="sticky left-0 z-[60] w-[32px] min-w-[32px] px-1 py-2.5 text-left text-xs font-bold whitespace-nowrap bg-[#3B82F6]"> </th>
                 <th className="sticky left-[32px] z-[60] w-[102px] min-w-[102px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">描述</th>
-                <th className="sticky left-[134px] z-[60] w-[100px] min-w-[100px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6] shadow-[2px_0_0_rgba(148,163,184,0.35)]">具体日期</th>
+                <th className="sticky left-[134px] z-[60] w-[100px] min-w-[100px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">具体日期</th>
                 <th className="w-[554px] min-w-[554px] px-2 py-2.5 text-left text-xs font-bold">备注</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="relative z-0">
               {schedule.map((row, idx) => (
                 <tr
                   key={row.index}
@@ -479,7 +490,7 @@ function Module2Calculator() {
                     ].join(" ")}
                   >
                     <div className="flex items-stretch gap-1">
-                      <div className="mt-1 h-full w-[2px] border-r-2 border-dashed border-[#93c5fd]/90" />
+                      <div className="mt-1 h-full w-[2px] bg-[#93c5fd]/90" />
                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#E8F4FF] text-[10px] font-bold text-[#007AFF]">
                         {row.index}
                       </div>
@@ -496,11 +507,11 @@ function Module2Calculator() {
                   </td>
                   <td
                     className={[
-                      "sticky left-[134px] z-30 w-[100px] min-w-[100px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2 align-top font-mono text-xs text-slate-800 shadow-[2px_0_0_rgba(148,163,184,0.22)]",
+                      "sticky left-[134px] z-30 w-[100px] min-w-[100px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2 align-top font-mono tabular-nums text-xs text-slate-800",
                       idx % 2 === 0 ? "bg-white" : "bg-[#F5F9FF]"
                     ].join(" ")}
                   >
-                    {formatDate(row.date)}
+                    {formatDateDisplay(row.date)}
                   </td>
                   <td className="w-[554px] min-w-[554px] px-2 py-2 align-top whitespace-nowrap">
                     <DoseAndNoteCell dose={row.dose} note={row.note} />
