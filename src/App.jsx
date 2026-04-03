@@ -554,12 +554,12 @@ function Module2Calculator() {
       {/* Table */}
       <div className="mt-4 min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl bg-[rgba(255,255,255,0.65)] backdrop-blur-[10px]">
         <div className="relative isolate max-h-[min(520px,56vh)] overflow-x-auto overflow-y-auto custom-scrollbar">
-          <table className="w-[804px] min-w-full border-collapse table-fixed text-left text-xs sm:text-sm">
+          <table className="w-[796px] min-w-full border-collapse table-fixed text-left text-xs sm:text-sm">
             <thead className="sticky top-0 z-[80] bg-[#3B82F6] text-white">
               <tr>
                 <th className="sticky left-0 z-[60] w-[32px] min-w-[32px] px-1 py-2.5 text-left text-xs font-bold whitespace-nowrap bg-[#3B82F6]"> </th>
                 <th className="sticky left-[32px] z-[60] w-[102px] min-w-[102px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">描述</th>
-                <th className="sticky left-[134px] z-[60] w-[116px] min-w-[116px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">具体日期</th>
+                <th className="sticky left-[134px] z-[60] w-[108px] min-w-[108px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">具体日期</th>
                 <th className="w-[554px] min-w-[554px] px-2 py-2.5 text-left text-xs font-bold">备注</th>
               </tr>
             </thead>
@@ -602,7 +602,6 @@ function Module2Calculator() {
                     ].join(" ")}
                   >
                     <div className="flex flex-col gap-1">
-                      <span className={isDone ? "text-slate-400" : "text-slate-800"}>{row.desc}</span>
                       {isDone || isNext ? (
                         <div className="flex flex-wrap items-center gap-1.5">
                           {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> : null}
@@ -615,11 +614,12 @@ function Module2Calculator() {
                           {isNext ? <span className="rounded bg-sky-100 px-1 py-[1px] text-[10px] text-sky-700">建议用药日</span> : null}
                         </div>
                       ) : null}
+                      <span className={isDone ? "text-slate-400" : "text-slate-800"}>{row.desc}</span>
                     </div>
                   </td>
                   <td
                     className={[
-                      "sticky left-[134px] z-30 w-[116px] min-w-[116px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2 align-top font-mono tabular-nums text-xs text-slate-800",
+                      "sticky left-[134px] z-30 w-[108px] min-w-[108px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2 align-top font-mono tabular-nums text-xs text-slate-800",
                       idx % 2 === 0 ? "bg-white" : "bg-[#F5F9FF]"
                     ].join(" ")}
                   >
@@ -629,7 +629,7 @@ function Module2Calculator() {
                         autoFocus
                         defaultValue={formatDate(row.date)}
                         onChange={(e) => applyDateChange(row.index, e.target.value)}
-                          className="w-[106px] border-0 bg-transparent p-0 font-mono tabular-nums text-xs text-[#0B3D91] outline-none"
+                          className="w-[98px] border-0 bg-transparent p-0 font-mono tabular-nums text-xs text-[#0B3D91] outline-none"
                       />
                     ) : (
                       <button
