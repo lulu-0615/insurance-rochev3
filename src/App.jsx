@@ -453,7 +453,7 @@ function Module2Calculator() {
 
   /** @type {Array<DrugKey>} */
   // Pill Toggle 2x2：左到右顺序
-  // 维泊妥珠单抗 -> 格菲妥珠单抗 -> 奥妥珠单抗 -> 莫妥珠单抗
+  // 维泊妥珠单抗 -> 格菲妥单抗 -> 奥妥珠单抗 -> 莫妥珠单抗
   const drugOrder = ["pola", "glofit", "obinutuzumab", "mosun"];
 
   /** @type {React.MutableRefObject<HTMLDivElement|null>} */
