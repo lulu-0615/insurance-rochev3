@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { ChevronDown, Copy, ExternalLink, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
+import { ChevronDown, Copy, ExternalLink, HeartPulse, Pencil, ShieldCheck, Sparkles } from "lucide-react";
 import insuranceConfig from "../insurance_config.json";
 
 /**
@@ -156,6 +156,16 @@ function formatDateDisplay(d) {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}/${m}/${day}`;
+}
+
+/**
+ * @param {Date} a
+ * @param {Date} b
+ * @returns {number}
+ */
+function dayDiff(a, b) {
+  const ms = cloneDate(a).getTime() - cloneDate(b).getTime();
+  return Math.round(ms / 86400000);
 }
 
 /**
@@ -362,6 +372,73 @@ function Module2Calculator() {
     return generateSchedule(drug, plan, start);
   }, [drug, plan, firstDate]);
 
+  const [editableSchedule, setEditableSchedule] = useState(/** @type {Array<ScheduleRow>} */ ([]));
+  const [editingRow, setEditingRow] = useState(/** @type {number|null} */ (null));
+  const [editingDate, setEditingDate] = useState("");
+  const [correctedRows, setCorrectedRows] = useState(/** @type {Record<number, boolean>} */ ({}));
+  const [shiftedRows, setShiftedRows] = useState(/** @type {Record<number, boolean>} */ ({}));
+
+  useEffect(() => {
+    setEditableSchedule(
+      schedule.map((r) => ({
+        ...r,
+        date: cloneDate(r.date)
+      }))
+    );
+    setEditingRow(null);
+    setEditingDate("");
+    setCorrectedRows({});
+    setShiftedRows({});
+  }, [schedule]);
+
+  /** @param {ScheduleRow} row */
+  function beginEditDate(row) {
+    setEditingRow(row.index);
+    setEditingDate(formatDate(row.date));
+  }
+
+  function cancelEditDate() {
+    setEditingRow(null);
+    setEditingDate("");
+  }
+
+  function commitEditDate() {
+    if (editingRow == null || !editingDate) return;
+    const nextDate = parseDateInput(editingDate);
+
+    setEditableSchedule((prev) => {
+      const rows = prev.map((r) => ({ ...r, date: cloneDate(r.date) }));
+      const anchorPos = rows.findIndex((r) => r.index === editingRow);
+      if (anchorPos < 0) return prev;
+
+      const syncAll = window.confirm("检测到日期变更，是否同步顺延后续所有用药计划？");
+      const nextCorrected = { [editingRow]: true };
+      const nextShifted = /** @type {Record<number, boolean>} */ ({});
+
+      rows[anchorPos].date = cloneDate(nextDate);
+
+      if (syncAll) {
+        /** @type {Array<number>} */
+        const intervals = rows.map((r, i) => (i === 0 ? 0 : dayDiff(rows[i].date, rows[i - 1].date)));
+        for (let i = anchorPos + 1; i < rows.length; i++) {
+          rows[i].date = addDays(rows[i - 1].date, intervals[i]);
+          nextShifted[rows[i].index] = true;
+        }
+      }
+
+      setCorrectedRows((prevMap) => ({ ...prevMap, ...nextCorrected }));
+      setShiftedRows(nextShifted);
+      if (Object.keys(nextShifted).length) {
+        window.setTimeout(() => setShiftedRows({}), 1400);
+      }
+
+      return rows;
+    });
+
+    setEditingRow(null);
+    setEditingDate("");
+  }
+
   /** @type {Array<DrugKey>} */
   // Pill Toggle 2x2：左到右顺序
   // 维泊妥珠单抗 -> 格菲妥珠单抗 -> 奥妥珠单抗 -> 莫妥珠单抗
@@ -475,7 +552,7 @@ function Module2Calculator() {
               </tr>
             </thead>
             <tbody className="relative z-0">
-              {schedule.map((row, idx) => (
+              {editableSchedule.map((row, idx) => (
                 <tr
                   key={row.index}
                   className={[
@@ -507,11 +584,48 @@ function Module2Calculator() {
                   </td>
                   <td
                     className={[
-                      "sticky left-[134px] z-30 w-[92px] min-w-[92px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2 align-top font-mono tabular-nums text-xs text-slate-800",
+                      "sticky left-[134px] z-30 w-[92px] min-w-[92px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2 align-top font-mono tabular-nums text-xs",
+                      correctedRows[row.index] ? "text-[#0B3D91]" : "text-slate-800",
+                      shiftedRows[row.index] ? "animate-pulse" : "",
                       idx % 2 === 0 ? "bg-white" : "bg-[#F5F9FF]"
                     ].join(" ")}
                   >
-                    {formatDateDisplay(row.date)}
+                    {editingRow === row.index ? (
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="date"
+                          value={editingDate}
+                          onChange={(e) => setEditingDate(e.target.value)}
+                          className="w-[96px] rounded border border-slate-200 bg-white px-1 py-0.5 text-[11px] text-slate-700 outline-none focus:border-[#3B82F6]"
+                        />
+                        <button
+                          type="button"
+                          className="rounded bg-[#0B3D91] px-1.5 py-0.5 text-[10px] text-white"
+                          onClick={commitEditDate}
+                        >
+                          确认
+                        </button>
+                        <button
+                          type="button"
+                          className="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] text-slate-700"
+                          onClick={cancelEditDate}
+                        >
+                          取消
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 rounded px-1 py-0.5 transition hover:bg-[#E8F1FF]"
+                        onClick={() => beginEditDate(row)}
+                      >
+                        <span>{formatDateDisplay(row.date)}</span>
+                        <Pencil className="h-3 w-3 text-slate-400" />
+                        {correctedRows[row.index] ? (
+                          <span className="rounded bg-[#0B3D91]/10 px-1.5 py-[1px] text-[10px] font-semibold text-[#0B3D91]">已修正</span>
+                        ) : null}
+                      </button>
+                    )}
                   </td>
                   <td className="w-[554px] min-w-[554px] px-2 py-2 align-top whitespace-nowrap">
                     <DoseAndNoteCell dose={row.dose} note={row.note} />
