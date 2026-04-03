@@ -83,7 +83,7 @@ function openScienceModule(setVisible) {
 const DRUG_LABELS = {
   obinutuzumab: "奥妥珠单抗",
   pola: "维泊妥珠单抗",
-  glofit: "格菲妥珠单抗",
+  glofit: "格菲妥单抗",
   mosun: "莫妥珠单抗"
 };
 
@@ -178,11 +178,11 @@ function parseDateInput(input) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-/** 格菲妥珠单抗：第1行（预处理）备注 */
+/** 格菲妥单抗：第1行（预处理）备注 */
 const GLOFIT_NOTE_ROW1 =
   "奥妥珠单抗预处理（若与GemOx联用，于第2天给予GemOx）。";
 
-/** 格菲妥珠单抗：第4-10行（方案备注） */
+/** 格菲妥单抗：第4-10行（方案备注） */
 const GLOFIT_NOTE_ROW4_10 = "或与GemOx联用";
 
 /** 莫妥珠单抗：第10行备注（达到 CR 则停止） */
