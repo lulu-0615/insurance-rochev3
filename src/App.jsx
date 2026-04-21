@@ -83,7 +83,7 @@ function openScienceModule(setVisible) {
 const DRUG_LABELS = {
   obinutuzumab: "奥妥珠单抗",
   pola: "维泊妥珠单抗",
-  glofit: "格菲妥单抗",
+  glofit: "格菲妥珠单抗",
   mosun: "莫妥珠单抗"
 };
 
@@ -178,11 +178,11 @@ function parseDateInput(input) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-/** 格菲妥单抗：第1行（预处理）备注 */
+/** 格菲妥珠单抗：第1行（预处理）备注 */
 const GLOFIT_NOTE_ROW1 =
   "奥妥珠单抗预处理（若与GemOx联用，于第2天给予GemOx）。";
 
-/** 格菲妥单抗：第4-10行（方案备注） */
+/** 格菲妥珠单抗：第4-10行（方案备注） */
 const GLOFIT_NOTE_ROW4_10 = "或与GemOx联用";
 
 /** 莫妥珠单抗：第10行备注（达到 CR 则停止） */
@@ -453,7 +453,7 @@ function Module2Calculator() {
 
   /** @type {Array<DrugKey>} */
   // Pill Toggle 2x2：左到右顺序
-  // 维泊妥珠单抗 -> 格菲妥单抗 -> 奥妥珠单抗 -> 莫妥珠单抗
+  // 维泊妥珠单抗 -> 格菲妥珠单抗 -> 奥妥珠单抗 -> 莫妥珠单抗
   const drugOrder = ["pola", "glofit", "obinutuzumab", "mosun"];
 
   /** @type {React.MutableRefObject<HTMLDivElement|null>} */
@@ -552,8 +552,8 @@ function Module2Calculator() {
       </div>
 
       {/* Table */}
-      <div className="mt-4 min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl bg-[rgba(255,255,255,0.65)] backdrop-blur-[10px]">
-        <div className="relative isolate max-h-[min(520px,56vh)] overflow-x-auto overflow-y-auto custom-scrollbar">
+      <div className="mt-4 min-h-0 min-w-0 rounded-2xl bg-[rgba(255,255,255,0.65)] backdrop-blur-[10px]">
+        <div className="relative isolate overflow-x-auto custom-scrollbar">
           <table className="w-[796px] min-w-full border-collapse table-fixed text-left text-xs sm:text-sm">
             <thead className="sticky top-0 z-[80] bg-[#3B82F6] text-white">
               <tr>
