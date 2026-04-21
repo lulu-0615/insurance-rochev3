@@ -552,14 +552,14 @@ function Module2Calculator() {
       </div>
 
       {/* Table */}
-      <div className="mt-4 min-h-0 min-w-0 rounded-3xl border border-slate-100 bg-[rgba(255,255,255,0.65)] shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-[10px]">
+      <div className="mt-4 min-h-0 min-w-0 overflow-hidden rounded-3xl border border-slate-100 bg-[rgba(255,255,255,0.65)] shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-[10px]">
         <div className="relative isolate overflow-x-auto custom-scrollbar">
           <table className="w-[796px] min-w-full border-0 border-collapse table-fixed text-left text-xs sm:text-sm">
-            <thead className="sticky top-0 z-[80] bg-white/80 text-slate-700 shadow-sm backdrop-blur-md">
+            <thead className="sticky top-0 z-[80] bg-[#3B82F6] text-white shadow-sm">
               <tr>
-                <th className="sticky left-0 z-[60] w-[32px] min-w-[32px] px-1 py-2.5 text-left text-xs font-bold whitespace-nowrap bg-white/80 backdrop-blur-md"> </th>
-                <th className="sticky left-[32px] z-[60] w-[102px] min-w-[102px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-white/80 backdrop-blur-md">描述</th>
-                <th className="sticky left-[134px] z-[60] w-[108px] min-w-[108px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-white/80 backdrop-blur-md">具体日期</th>
+                <th className="sticky left-0 z-[60] w-[32px] min-w-[32px] px-1 py-2.5 text-left text-xs font-bold whitespace-nowrap bg-[#3B82F6]"> </th>
+                <th className="sticky left-[32px] z-[60] w-[102px] min-w-[102px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">描述</th>
+                <th className="sticky left-[134px] z-[60] w-[108px] min-w-[108px] shrink-0 flex-shrink-0 whitespace-nowrap px-2 py-2.5 text-left text-xs font-bold bg-[#3B82F6]">具体日期</th>
                 <th className="w-[554px] min-w-[554px] px-2 py-2.5 text-left text-xs font-bold">备注</th>
               </tr>
             </thead>
